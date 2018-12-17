@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+    <!-- Good default declaration:
+    * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+    * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+    * Disables use of eval() and inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+        * Enable inline JS: add 'unsafe-inline' to default-src
+        * Enable eval(): add 'unsafe-eval' to default-src
+    * Create your own at http://cspisawesome.com
+    -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
+	 <script src="./js/jquery.min.js"></script>
+	<script src="./assets/js/bootstrap.min.js"></script>
+	
+	<link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+	<link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+	<link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
+	<link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet" />
+	<link href="assets/css/demo.css" rel="stylesheet" />
+	
+	
+    <title>Add Tasks</title>
+	<style>
+	.row {
+		margin-right: 0px;
+		margin-left: 0px;
+		}
+	.container-fluid {
+		padding-right: 0px;
+		padding-left: 0px;
+	}
+	.col-lg-1,
+.col-lg-10,
+.col-lg-11,
+.col-lg-12,
+.col-lg-2,
+.col-lg-3,
+.col-lg-4,
+.col-lg-5,
+.col-lg-6,
+.col-lg-7,
+.col-lg-8,
+.col-lg-9,
+.col-md-1,
+.col-md-10,
+.col-md-11,
+.col-md-12,
+.col-md-2,
+.col-md-3,
+.col-md-4,
+.col-md-5,
+.col-md-6,
+.col-md-7,
+.col-md-8,
+.col-md-9,
+.col-sm-1,
+.col-sm-10,
+.col-sm-11,
+.col-sm-12,
+.col-sm-2,
+.col-sm-3,
+.col-sm-4,
+.col-sm-5,
+.col-sm-6,
+.col-sm-7,
+.col-sm-8,
+.col-sm-9,
+.col-xs-1,
+.col-xs-10,
+.col-xs-11,
+.col-xs-12,
+.col-xs-2,
+.col-xs-3,
+.col-xs-4,
+.col-xs-5,
+.col-xs-6,
+.col-xs-7,
+.col-xs-8,
+.col-xs-9 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 0px;
+    padding-left: 0px;
+}
+.container-fluid>.navbar-collapse,
+.container-fluid>.navbar-header,
+.container>.navbar-collapse,
+.container>.navbar-header {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+.nav>li>a {
+    position: relative;
+    display: block;
+    padding: 10px 5px
+}
+.card .content {
+    padding: 5px 10px 1px 5px;
+    }
+	</style>
+</head>
+
+<body >
+<form >
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="index.html"><span class="icon icon-home">GreyBox Admin</span></a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="index.html">&nbsp;Home</a></li>
+        
+      </ul>
+      
+    </div>
+  </div>
+</nav>
+
+<div class="content" id='mainbody'>
+	<div class="container-fluid">
+		
+		<div class="tab-content">
+			
+	
+
+				<div class="card" style="padding: 5px 5px 10px 1px;margin-bottom:0px;">
+					<div class="panel-body">
+						<div><a href='taskhistory.html' style='font-size:9px;'>View History</a></div>
+					<div class="row">
+						
+					<div class="content col-md-3 col-xs-6 ">
+					
+						<!----<br><input class="form-control"  type='text' id="agent" placeholder="Name*" >----->
+						<label><small>Select Agent</small></label>
+						<select class="form-control text-muted input-sm" name='class'  id='agent'  style='font-size: 85%;'></select>
+					</div>
+					<div class="content col-md-3 col-xs-6 ">
+						<label><small>Task Due Date</small></label>
+						<input type="date" id="tdate" class="form-control" style='font-size:85%;'><br>
+					</div>
+					<div class="content col-md-12 col-xs-12 ">
+						<textarea class="form-control" rows="3" id="task" placeholder="Assign Task" ></textarea><br>
+					</div>
+					</div>
+						<div class="row"><br>
+						<button type='button-sm ' class='btn btn-positive pull-left' onclick='addtask();return false;'>Assign Task</button>
+						<button type='button' id="save"  class="btn btn-positive pull-right" onClick="savetask()">Save</button>
+						
+						</div>
+					</div>
+				</div>
+				<div class="card">
+					<ul class="table-view" id='contactlist'>
+						
+					</ul>
+					<div class="row ">
+							
+						</div>
+				</div>	
+			
+			<script>
+			var ci=1;
+				function addtask(){
+					var cname = document.getElementById('agent').value;
+					var cdes = document.getElementById('task').value;
+					var tdate = document.getElementById('tdate').value;
+					var e = document.getElementById("agent");
+					var itemname = e.options[e.selectedIndex].text;
+					
+					if(cname.trim().length > 0){
+					
+					var clist = "<li class='table-view-cell' style='padding-left:15px;padding-top:6;padding-bottom:6px;' >";
+					clist += "<div class='row'><div class='content col-md-3 col-xs-8 '><p style='font-size:10px;' id='name"+ci+"'>"+cname+"</p><p style='font-size:10px;'>"+ itemname+"</p></div>";
+					clist += "<div class='content col-md-3 col-xs-4 '><p style='color:red;text-align:right;font-size:9px;' id='cdate"+ci+"'>"+tdate+"</p></div>";
+					//clist += "<p style='font-size:10px;color:red;text-align:right;' id='cdate"+ci+"'>"+tdate+"</p>";
+					clist += "<div class='content col-md-12 col-xs-12 '><p class='text-muted' style='font-size:9px;' id='des"+ci+"'>"+cdes+"</p></div>";
+					clist += "</div></li>";
+					
+					document.getElementById('contactlist').innerHTML += clist;
+					
+					document.getElementById('agent').value = "";
+					document.getElementById('task').value = "";
+					document.getElementById("agent").focus();
+					
+					ci++;
+					}
+					return false;
+				
+				}
+			</script>
+			
+			
+				
+            </div>
+			
+					
+	</div>	
+</div>
+</form>	
+</body>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/dataTbl.js"></script>
+<script>
+Date.prototype.toDateInputValue = (function() {
+    var local = new Date(this);
+    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+    return local.toJSON().slice(0,10);
+});
+$(document).ready( function() {
+	//$('#admtdt').datepicker({ dateFormat: 'dd-M-yy' });
+	$('#tdate').val(new Date().toDateInputValue());
+});
+getDropDownData('agent','SELECT id,name from t_agent_tbl ;');
+</script>
+<script>
+
+function savetask()
+{
+		var str='INSERT into t_task_tbl (name,task,dt) VALUES ';
+		var flg = 0;
+		var tasks = {
+			details: []
+		};
+		
+		for(var i=1;i<ci;i++){
+			var agent = document.getElementById('name' +i).innerHTML;
+			var task = document.getElementById('des' +i).innerHTML;
+			var dt = document.getElementById('cdate' +i).innerHTML;
+			//var mob = document.getElementById('mob' + i).innerHTML;
+			
+			if(flg)
+				str += ",";
+			else
+				flg=1;
+				
+			str += '("' + agent + '","' + task + '", "'+ dt +'" ) ';
+			
+		}
+		str +=";";
+		var sql = "q="+str;
+		
+	var req = new XMLHttpRequest();
+	req.onreadystatechange = function() {
+
+		if (req.readyState == 4 && req.status == 200) {
+		
+			if(req.responseText.length < 15)
+				document.getElementById('mainbody').innerHTML = "<p style='font-size:38px;color:#4CAF50;text-align:center;margin-top:200px;'>Success</p><br><p class='text-muted' style='line-height:1.0;text-align:center'><small>Tasks assigned</small></p>"
+			else	
+				document.getElementById('mainbody').innerHTML = req.responseText;
+		}
+	};
+	
+	req.open("POST", base_url + "dataTbl.php");
+	req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	
+	
+	req.send(sql);
+	
+}
+</script>
+
+ 
+</html>

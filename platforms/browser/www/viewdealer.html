@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+    <!-- Good default declaration:
+    * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+    * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+    * Disables use of eval() and inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+        * Enable inline JS: add 'unsafe-inline' to default-src
+        * Enable eval(): add 'unsafe-eval' to default-src
+    * Create your own at http://cspisawesome.com
+    -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
+	 <script src="./js/jquery.min.js"></script>
+	<script src="./assets/js/bootstrap.min.js"></script>
+	
+	<link href="assets/css/font-awesome.min.css" rel="stylesheet">
+	<link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+	<link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+	<link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
+	<link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet" />
+	<link href="assets/css/demo.css" rel="stylesheet" />
+	
+	
+    <title>View DelarDetails</title>
+	<style>
+	.row {
+		margin-right: 5px;
+		margin-top: 5px;
+		margin-left: 10px;
+		}
+	.container-fluid {
+		padding-right: 0px;
+		padding-left: 0px;
+	}
+	.col-lg-1,
+.col-lg-10,
+.col-lg-11,
+.col-lg-12,
+.col-lg-2,
+.col-lg-3,
+.col-lg-4,
+.col-lg-5,
+.col-lg-6,
+.col-lg-7,
+.col-lg-8,
+.col-lg-9,
+.col-md-1,
+.col-md-10,
+.col-md-11,
+.col-md-12,
+.col-md-2,
+.col-md-3,
+.col-md-4,
+.col-md-5,
+.col-md-6,
+.col-md-7,
+.col-md-8,
+.col-md-9,
+.col-sm-1,
+.col-sm-10,
+.col-sm-11,
+.col-sm-12,
+.col-sm-2,
+.col-sm-3,
+.col-sm-4,
+.col-sm-5,
+.col-sm-6,
+.col-sm-7,
+.col-sm-8,
+.col-sm-9,
+.col-xs-1,
+.col-xs-10,
+.col-xs-11,
+.col-xs-12,
+.col-xs-2,
+.col-xs-3,
+.col-xs-4,
+.col-xs-5,
+.col-xs-6,
+.col-xs-7,
+.col-xs-8,
+.col-xs-9 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 0px;
+    padding-left: 0px;
+}
+.container-fluid>.navbar-collapse,
+.container-fluid>.navbar-header,
+.container>.navbar-collapse,
+.container>.navbar-header {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+.nav>li>a {
+    position: relative;
+    display: block;
+    padding: 10px 5px
+}
+.card .content {
+    padding: 10px 10px 5px 5px; }
+	</style>
+	<script> var c=0;</script>
+</head>
+
+<body >
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="index.html">GreyBox Admin</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="index.html">&nbsp;Home</a></li>
+        <li class="dropdown">
+		  <a href="index.html" onclick="localStorage['eid']='';document.location='index.html'">&nbsp;&nbsp;Logout</a>
+        </li>
+        <!----<li><a href="#">&nbsp;&nbsp;View Agents </a></li>---->
+      </ul>
+      
+    </div>
+  </div>
+</nav>
+
+<div class="content" id='mainbody'>
+	<div class="container-fluid">
+		<div class="card" >
+			<div class="row " id='searchdiv' style='margin-left:1px;'>
+				<div class="content col-md-10 col-xs-10 ">
+					<label>Select Dealer : </label>
+					<select class="form-control text-muted input-sm" name='class'  id='class'  style='font-size: 85%;'></select>
+				</div>
+				<div class="content col-md-2 col-xs-2 "><br><button type='button' class="btn-sm " onClick="getDealer();return false">Go</button>
+				</div>
+			</div>
+			
+			<div class="tab-content" id='info' style='display:none;'>
+				<ul class="nav nav-tabs" style='font-size: 85%;'>					
+					<li class='active'><a data-toggle='tab' href='#one' style='color:black;'><small>Discussions</small></a></li>
+					<li><a data-toggle='tab' href='#two' style='color:black;'><small>Orders</small></a></li>			
+				</ul><br>
+				
+				<div class="panel panel-default tab-pane fade in active" id="one" style="border-style: none">
+					<div class="row " id='dhistory' style="line-height:1.4;margin-left:1px;"></div>
+					<div class="row " id='dview' style="line-height:1.4"></div>
+				</div>
+						
+				<div class="panel panel-default tab-pane fade in " id="two">
+					<div class="form-group row" id = "ohistory"></div>
+					<div class="form-group row text-muted" id='newitem' style='font-size: 75%;'><br></div>
+				</div>
+							
+			</div>
+		</div>
+	</div>
+</div>	
+</div>
+</body>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/dataTbl.js"></script>
+
+<script>
+	var did;
+	//var base_url = document.URL.substr(0,document.URL.lastIndexOf('/'));
+	//var base_url = "http://greyboxerp.com/track";
+	var req = new XMLHttpRequest();
+		req.onreadystatechange = function() {
+		if (req.readyState == 4 && req.status == 200) {
+			var dataArray=JSON.parse(req.responseText);
+			updateDD(dataArray,'class');
+		}
+		
+		};
+		localStorage["sid"] = 1000129;
+		req.open("GET", base_url + "/getTbl.php?agentid="+ localStorage["sid"], true);
+		//req.open("GET", base_url + "/getTbl.php?getall", true);
+		req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		req.send();
+
+</script>
+<script>
+
+
+function handleClick(cb) {
+  if(cb.checked){
+	document.getElementById('r2').disabled = false;
+	document.getElementById('r3').disabled = false;
+  }
+  else{
+	document.getElementById('r2').disabled = true;
+	document.getElementById('r3').disabled = true;
+  }
+}
+
+function getLocation(){
+	
+      navigator.geolocation.getCurrentPosition(saveVisit,onError);
+}
+function onError(error) {
+		loc = ["0","0"];		
+    }
+
+	  
+function getDealer(){
+		did = document.getElementById('class').value;
+	
+		var req = new XMLHttpRequest();
+		req.onreadystatechange = function() {
+		if (req.readyState == 4 && req.status == 200) {
+			var data=JSON.parse(req.responseText);
+			var d = "<div class='row ' ><label style='font-size:10px;color:blue;'> Agent : " + data[0]['agent'] + "</label></div>";
+			d += "<div class='row ' ><div class='content col-md-4 col-xs-4'><label>Firm Name : </label>";
+			d += "<p style='font-size:75%'>" + data[0]['firmname'] + "</p></div>";
+			d += "<div class='content col-md-6 col-xs-6'><label>Address : </label>";
+			d += "<p style='font-size:70%'>" + data[0]['addr'] + "</p></div>";
+			d += "<div class='content col-md-2 col-xs-2'><img src='./img/search.png' class='img-responsive' width='20' height='20' onclick='location.reload();' >";
+			d +="</div></div>";
+			document.getElementById('info').style.display = 'block' ;
+			document.getElementById('searchdiv').innerHTML=d;
+			
+						
+			getData('','','__!t_view_dealer02,' + did + '',0,0,102);
+			
+		}
+		
+		};
+		//var base_url = "http://theqalabs.com/track/";
+		req.open("GET", base_url + "/getTbl.php?did="+ did, true);
+		req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		req.send();
+  
+}
+
+function custom(data){
+	var dhistory ="";
+	var ohistory ="";
+	var ordr;
+	var isAlert ="";
+	
+	for (var i = 0; i < data.length; i++) {
+		if(data[i]['discussion'].length==0)
+			data[i]['discussion'] = "--No notes!--";
+		
+		if(data[i]['d']> .5)
+		 isAlert = "<i class='fa fa-exclamation-triangle' style='font-size:14px;color:red'></i>" ;
+		
+		dhistory += "<div class='row' style='margin-right:2px;margin-top:1px;margin-left:2px;'><div class='col-xs-2 text-muted' style='padding-left:10px;'><label style='font-size: 10px;'>"+formatDate(data[i]['mdate'])+"</label></div><div class='col-xs-3 text-muted' ><label style='font-size: 10px;'>"+data[i]['contact']+"</label></div><div class='col-xs-6 text-muted' style='font-size: 75%;text-transform:none;font=family:Museo Sans,sans-serif;padding-left:10px'>"+data[i]['discussion'].substring(0,100)+"<a href='' onclick='detailedview(this,"+JSON.stringify(data[i])+");return false;'>..details</a>"+ isAlert +"</div></div>";
+		
+		
+		if(data[i]['ordr'].length>5){
+			var o = data[i]['ordr'];
+			ordr = JSON.parse(o);
+			
+			ohistory += "<div class='row' style=''><div class='row' style='background-color:#A3E4D7;margin-left:0px;margin-right:0px;'><div class='col-xs-3 text-muted' style='font-size: 75%;color:red;'>&nbsp;&nbsp;"+formatDate(data[i]['mdate'])+"</div><div class='col-xs-9 text-muted' ><label style='font-size: 10px;'>&nbsp;&nbsp;&nbsp;"+data[i]['firmname']+"</label></div></div>";
+			
+			ohistory += "<div class='row' style='margin-right:2px;margin-top:1px;margin-left:2px;'><div class='col-xs-6 text-muted' ><label style='font-size: 10px;'>ITEM</label></div><div class='col-xs-3 text-muted' ><label style='font-size: 10px;'>QTY</label></div><div class='col-xs-3 text-muted' ><label style='font-size: 10px;'>PRICE</label></div></div>";
+			
+			
+			for(var j=0;j < ordr.length; j++){
+				
+				ohistory += "<div class='row' style='margin-right:2px;margin-top:1px;margin-left:2px;'><div class='col-xs-6 text-muted' style='font-size: 65%;'>"+ordr[j]['item']+"</div><div class='col-xs-3 text-muted' ><label style='font-size: 10px;'>"+ordr[j]['qty']+"</label></div><div class='col-xs-3 text-muted' ><label style='font-size: 10px;'>"+ordr[j]['price']+"</label></div></div>";
+			}
+			
+			ohistory +="</div>";
+			
+		}
+		
+	}
+	
+	document.getElementById('dhistory').innerHTML= dhistory;
+	document.getElementById('ohistory').innerHTML= ohistory;
+	return false;
+}
+
+function detailedview(ele,data){
+	
+	var e = ele.parentNode.parentNode;
+	
+	var dview = "<div class='card' style='margin-bottom:10px;'>";
+	dview += "<div class='row ' style='background-color:#A3E4D7;margin-left:0px;margin-right:0px;' ><div class='col-xs-4 text-muted' style='background-color:#A3E4D7'><label style='font-size: 12px;'><b>&nbsp;&nbsp;&nbsp; "+formatDate(data['mdate'])+"</b></label></div><div class='col-xs-8 text-muted' style='font-size: 85%;text-transform:none;font=family:Museo Sans,sans-serif;'></div></div>";
+	
+	dview += "<div class='row '><div class='col-xs-4 text-muted' style='font-size: 50%;'><label style='font-size: 10px;'> Contact :<b> "+data['contact']+"</b></label></div><div class='col-xs-8 text-muted' style='font-size: 85%;text-transform:none;font=family:Museo Sans,sans-serif;'>"+data['discussion']+"</div></div>";
+	dview += "<div class='row'><div class='col-xs-4 text-muted' style='font-size: 65%;'><label style='font-size: 10px;'> Next Meet :<br><font color='red'> "+data['nxtmeet']+"</font></label></div><div class='col-xs-8 text-muted' style='font-size: 10px;text-transform:none;font=family:Museo Sans,sans-serif;'> ToDo :<br> <font color='blue'>"+data['todo']+"</font></div></div>";
+	
+	var l = data['ordr'].length;
+	var order,color;
+	if(l>5){
+		order = 'YES';
+		color='green';
+	}else{
+		order='NO';
+		color='white';
+	}	
+	
+	dview += "<div class='row'><div class='col-xs-4 text-muted' style='font-size: 65%;'><label style='font-size: 10px;color:"+color+"'>Order :<br><b> "+order+"</b></label></div><div class='col-xs-8 text-muted' style='font-size: 10px;text-transform:none;font=family:Museo Sans,sans-serif;'> Distance :<br> <font color='blue'>"+data['d']+"km</font></div>";
+	
+	dview += "</div></div>";
+	
+	e.innerHTML = dview;
+	return false;
+	
+}
+
+function removeorder(ele){
+	var e = ele.parentNode.parentNode;
+	var element = e;//document.getElementById("item1");
+	element.parentNode.removeChild(element);
+}
+
+
+</script>
+ 
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+    
+	 <script src="./js/jquery.min.js"></script>
+	<script src="./assets/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+	<link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+	<link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
+	
+    <title>GreyBox Client</title>
+</head>
+
+<body>
+<form>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="index.html">GreyBox Admin</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="index.html">&nbsp;Home</a></li>
+        <li class="dropdown">
+		  <a href="index.html" onclick="localStorage['eid']='';document.location='index.html'">&nbsp;&nbsp;Logout</a>
+        </li>
+        <!----<li><a href="#">&nbsp;&nbsp;View Agents </a></li>---->
+      </ul>
+      
+    </div>
+  </div>
+</nav>
+    <div class="content">
+        <div class="container-fluid">
+		<div class="card">
+			<div id = 'row'></div>
+			<div class="row">
+			
+				<div class="content col-md-3 col-xs-6"><center>
+					<a href="./locatedealer.html">
+					<img class="img-responsive" width="50" height="50" src="./img/adddealer.png">
+					<h5>Locate Dealer</h5></a></center>
+				</div>
+				<div class="content col-md-3 col-xs-6"><center>
+					<a href="./viewdealer.html">
+					<img class="img-responsive" width="50" height="50" src="./img/dealerrecord.png">
+					<h5>Visit Report</h5></a></center>
+				</div>
+				<div class="content col-md-3 col-xs-6"><center>
+					<a href="./track.html">
+					<img class="img-responsive" width="50" height="50" src="./img/track.png">
+					<h5>Track Agent</h5></a></center>
+				</div>
+				<div class="content col-md-3 col-xs-6"><center>
+					<a href="./addagent.html">
+					<img class="img-responsive" width="50" height="50" src="./img/adddealer.png">
+					<h5>Add Agent</h5></a></center>
+				</div>
+				<div class="content col-md-3 col-xs-6"><center>
+					<a href="./addtask.html">
+					<img class="img-responsive" width="50" height="50" src="./img/tasks.png">
+					<h5>Assign Task</h5></a></center>
+				</div>
+				<div class="content col-md-3 col-xs-6"><center>
+					<a href="./performance.html">
+					<img class="img-responsive" width="50" height="50" src="./img/performance.png">
+					<h5>Performance</h5></a></center>
+				</div>
+				<div class="content col-md-3 col-xs-6"><center>
+					<a href="./addproduct.html">
+					<img class="img-responsive" width="50" height="50" src="./img/product.png">
+					<h5>Add Products</h5></a></center>
+				</div>
+				<div class="content col-md-3 col-xs-6"><center>
+					<a href="./orderreport.html">
+					<img class="img-responsive" width="50" height="50" src="./img/order.png">
+					<h5>Order Report</h5></a></center>
+				</div>
+				
+				
+			</div>	
+		</div>		
+			
+		</div>	
+		
+	</div>
+</form>	
+</body>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/dataTbl.js"></script>
+
+<script async defer type="text/javascript">
+app.initialize();
+
+</script>
+
+</html>

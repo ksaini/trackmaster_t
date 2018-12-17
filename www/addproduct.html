@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+    <!-- Good default declaration:
+    * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+    * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+    * Disables use of eval() and inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+        * Enable inline JS: add 'unsafe-inline' to default-src
+        * Enable eval(): add 'unsafe-eval' to default-src
+    * Create your own at http://cspisawesome.com
+    -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
+	 <script src="./js/jquery.min.js"></script>
+	<script src="./assets/js/bootstrap.min.js"></script>
+	
+	<link href="assets/css/font-awesome.min.css" rel="stylesheet">
+	<link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+	<link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+	<link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
+	<link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet" />
+	<link href="assets/css/demo.css" rel="stylesheet" />
+	
+	
+    <title>Add Product</title>
+	<style>
+	.row {
+		margin-right: 0px;
+		margin-left: 0px;
+		}
+	.container-fluid {
+		padding-right: 0px;
+		padding-left: 0px;
+	}
+	.col-lg-1,
+.col-lg-10,
+.col-lg-11,
+.col-lg-12,
+.col-lg-2,
+.col-lg-3,
+.col-lg-4,
+.col-lg-5,
+.col-lg-6,
+.col-lg-7,
+.col-lg-8,
+.col-lg-9,
+.col-md-1,
+.col-md-10,
+.col-md-11,
+.col-md-12,
+.col-md-2,
+.col-md-3,
+.col-md-4,
+.col-md-5,
+.col-md-6,
+.col-md-7,
+.col-md-8,
+.col-md-9,
+.col-sm-1,
+.col-sm-10,
+.col-sm-11,
+.col-sm-12,
+.col-sm-2,
+.col-sm-3,
+.col-sm-4,
+.col-sm-5,
+.col-sm-6,
+.col-sm-7,
+.col-sm-8,
+.col-sm-9,
+.col-xs-1,
+.col-xs-10,
+.col-xs-11,
+.col-xs-12,
+.col-xs-2,
+.col-xs-3,
+.col-xs-4,
+.col-xs-5,
+.col-xs-6,
+.col-xs-7,
+.col-xs-8,
+.col-xs-9 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 0px;
+    padding-left: 0px;
+}
+.container-fluid>.navbar-collapse,
+.container-fluid>.navbar-header,
+.container>.navbar-collapse,
+.container>.navbar-header {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+.nav>li>a {
+    position: relative;
+    display: block;
+    padding: 10px 5px
+}
+.card .content {
+    padding: 10px 10px 5px 5px; }
+	
+body {
+	text-transform:inherit;
+	
+}
+.chat
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.chat li
+{
+    margin-bottom: 12px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #B3A9A9;
+}
+
+.chat li.left .chat-body
+{
+    margin-left: 60px;
+	font-size:12px;
+}
+.chat-body1
+{
+	margin-left: 15px;
+	font-size:9px;
+}
+.chat li.right .chat-body
+{
+    margin-right: 60px;
+	font-size:12px;
+	
+}
+
+
+.chat li .chat-body p
+{
+    margin: 0;
+	width:100%;
+    color: #777777;
+}
+
+.panel .slidedown .glyphicon, .chat .glyphicon
+{
+    margin-right: 5px;
+}
+
+.panel-body
+{
+  #  overflow-y: scroll;
+	min-height: 530px;
+    height: 100%;
+}
+.product {
+font-size:11px;
+font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
+color: rgb(72, 72, 72) !important;
+letter-spacing: 0.5px !important;
+}
+.code {
+font-size:11px;
+font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
+color: #008489;
+letter-spacing: 0.5px !important;
+}
+
+.select {
+font-size:10px;
+font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
+color: #E87E04;
+text-align:center;
+letter-spacing: 0.5px !important;
+}
+
+.info
+{
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-bottom: 1px dotted #B3A9A9;
+	width:45%;
+	overflow: hidden;
+	background-color:#ffff;
+	color:#777;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size: 12px;
+	height:25px;
+}
+.prop
+{
+	width: 50%; 
+	float: right;
+	background-color:#FDE3A7;
+	height:25px;
+	padding-top:2px;
+}
+.prod{
+	width: 40%; 
+	float: left;	
+	background-color:#FDE3A7;
+	height:25px;
+	padding-top:2px;
+}
+.prodtitle{
+	width: 40%; 
+	float: left;	
+	
+	height:15px;
+	padding-top:2px;
+}
+.gbhide {
+	display:none;
+}
+.editable {
+	background-color:#faffbd;
+	height:25px;
+	padding-top:6px;
+}
+
+	</style>
+</head>
+
+<body >
+
+<nav class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom:5px;">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+	   
+    </div>
+   <!--- <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="index.html">&nbsp;Home</a></li>
+        <li class="dropdown">
+		  <a href="index.html" onclick="localStorage['eid']='';localStorage.setItem('ordr', '');;document.location='index.html'">&nbsp;&nbsp;Logout</a>
+        </li>
+      </ul>
+      
+    </div>---->
+  </div>
+</nav>
+
+<div class="content" id='mainbody'>
+	<div class="container-fluid">
+		<div class="panel panel-default">
+                <div class="panel-heading" id='phead' style='background:#265a88;color:white;text-align:center;padding-top:40px;padding-bottom:5px;'></div>
+				<div class="panel-body">
+                    <ul class="chat" id="chat"><br><br><br>
+                        <button class='btn btn-sm order' onclick='addProductC()'>Client facing Brands</button>
+						<button class='btn btn-sm order' onclick='addProduct();'>Mgf side Products</button>       
+                    </ul>
+				</div>
+			</div>			
+		</div>	
+		
+	</div>	
+</div>
+
+</body>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/dataTbl.js"></script>
+
+<script>
+var flag;
+function addProduct(){
+	flag = 1;
+	getData('table1','thead1','SELECT id,name,code,unit,info from t_item_tbl ;',4,1,101);
+}
+function addProductC(){
+	flag = 0;
+	getData('table1','thead1','SELECT id,name,code,unit,info from t_item_tbl_c ;',4,1,102);
+}
+
+function deleteRow(x){
+	
+	postData("DELETE from t_item_tbl where id =" + x.cells[0].innerHTML + ";", "Deleted Successfully");
+	location.reload();
+}
+function addRow(){
+
+	var tbl = 't_item_tbl';
+	if(flag ==0) tbl = 't_item_tbl_c';
+	
+	var msg = "";
+	//newCell0.innerHTML = "<button type='button' onclick=addProduct('t_item_tbl','name,code,price,unit',this)>Add</button>";
+	// add first row blank
+		msg += "<li id='m_0'   class='left clearfix' style='margin-top:5px;margin-left:-5px;margin-right:-12px; padding-top:10px;'>";
+			msg += "<div class='row'   style='margin-left:4px;margin-right:4px;'>";
+			msg += "<div id='tmp1' class='col-xs-3 code editable' contenteditable=true autofocus >CODE</div>";
+			msg += "<div id='tmp2' class='col-xs-4 product editable' contenteditable=true>Prd</div>";
+			msg += "<div id='tmp4' class='col-xs-1 product editable' contenteditable=true>Ton</div>";
+			msg += "<button class='col-xs-2 btn btn-sm select' style='padding-top:2px;padding-bottom:2px;' onclick=addNewProduct('"+ tbl +"','code,name,unit',this)>Save</button>";			
+			msg += "</div></li>";
+			chat = document.getElementById("chat");
+			chat.innerHTML = msg + chat.innerHTML;
+}
+
+function addNewProduct(tbl,colList,ele){
+	var val = "'"+document.getElementById("tmp1").innerHTML + "','" + document.getElementById("tmp2").innerHTML + "'";
+	    val = val + ",'" + document.getElementById("tmp4").innerHTML + "'"
+	var sql = "tbl=" + tbl + "&colList="+colList + "&valList=" + val ;
+	var req = new XMLHttpRequest();
+	req.onreadystatechange = function() {
+		if (req.readyState == 4 && req.status == 200) {
+			try {
+				//alert(req.responseText);
+				//alert("Added successfully");
+				location.reload();
+								
+			} catch (e) {
+				alert("Some errors have occured to add/update.");
+				console.log("Exception::-"+e.toString());
+			}
+		}
+	};
+	
+
+	req.open("POST", base_url + "/dataInsert.php", true);
+	req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	req.send(sql);
+	//location.reload();
+}
+
+function custom(data,p){
+	var chat = document.getElementById("chat");
+	chat.innerHTML = "";
+		var msg = "";
+		var x = {};
+		var y  = new Array();
+		y.push(x);	
+		
+		if(p==102)
+			msg += "<li class='left clearfix'><button class='btn btn-sm order' onclick='addProduct();'>Mgf side Products</button><button class='btn btn-sm order pull-right' onclick=addRow()>+</button></li>";
+		else	
+			msg += "<li class='left clearfix'><button class='btn btn-sm order' onclick='addProductC()'>Client facing Brands</button><button class='btn btn-sm order pull-right' onclick=addRow()>+</button></li>";
+			
+		
+				
+		for (var i = 0; i < data.length; i++) {
+			var id = data[i]['id'] ;
+			var info = data[i]['info'] ;			
+			
+			msg += "<li id='m_"+id+"'   class='left clearfix' style='margin-top:5px;margin-left:-5px;margin-right:-12px; padding-top:10px;'>";
+			msg += "<div class='row' onclick=showPrdDetails("+id+") style='margin-left:4px;margin-right:4px;'>";
+			msg += "<div class='col-xs-3 code' >" + data[i]['code'] + "</div>";
+			msg += "<div class='col-xs-4 product' >" + data[i]['name'] + "</div>";
+			
+			msg += "<div class='col-xs-1 product' >" + data[i]['unit'] + "</div>";
+			msg += "<div class='col-xs-2 details' style='text-align:center;' ><i class='fa fa-edit' style='font-size:12px;color:red;'></i></div>";
+			//msg += "<div class='col-xs-2 select' id='sel_"+data[i]['id']+"' onclick=selectIt("+data[i]['id']+")>Select</div>";
+			msg += "</div>";
+			
+			if(info==null)	
+				info = JSON.stringify(y);
+			
+			msg += prdDetails(id,info);	
+				
+			msg += "</li>";
+		}
+		chat.innerHTML = msg;	
+}
+
+function prdDetails(id,info){
+	
+	try	{ info =JSON.parse(info);} catch (e) {}
+	
+	var msg = "";
+	msg += '<div class=" clearfix to-left gbhide" name="prd" id="prdetail_'+id+'" >';
+    msg +='    <div class=" code row" style="padding-top:20px;text-align:left;"><u>PRODUCT PROPERTIES</u>&nbsp;&nbsp;<i class="fa fa-angle-up" style="font-size:16px" onclick=foldup('+id+')></i></div><br>';
+	msg += "<div class='info'>";
+	msg += "<div  class = 'prodtitle' >PRO</div>";
+	msg += "<div  class='prodtitle'>VALUE</div>";
+	msg += "</div>";
+    msg +='    <div class="row " id="pinfo'+id+'">';
+	for (var i=0; i < info.length; i++){
+		for(var k in info[i]){
+			msg +=showProperties(id,k,info[i][k]);}
+	}
+	msg += '</div><br>';
+	msg += "<button class='btn btn-sm select' style='padding-top:2px;padding-bottom:2px;border-width:1px;' onclick=addProperties("+id+",'','')>Add Property</button>&nbsp;&nbsp;"
+	msg += "<button class='btn btn-sm select' style='padding-top:2px;padding-bottom:2px;border-width:1px;' onclick='save("+id+")'>Save</button>";
+	
+	//li.innerHTML += msg;	
+	return msg;
+}
+
+function showPrdDetails(id){
+	event.stopPropagation();
+	var lis = document.getElementsByName("prd");
+	for(var i=0; i < lis.length;i++)
+		lis[i].classList.add('gbhide');
+	
+	try{
+	document.getElementById('prdetail_'+ id).classList.remove('gbhide');} catch (e) {}
+	
+}
+
+function foldup(id){
+	document.getElementById("prdetail_" + id).classList.add('gbhide');
+}
+
+var item = 0;
+function addProperties(id,k,v){
+	event.stopPropagation();
+	item++;
+	var pinfo = document.getElementById("pinfo" + id);
+	var txt = "";	
+	txt += "<div class='info'>";
+	txt += "<div id=key_" + item + " name='product"+id+"' contenteditable='true' class = 'prod' >"+k+"</div>";
+	txt += "<div id=val_" + item + " name='attr"+id+"' contenteditable='true' class='prop'>"+v+"</div>";
+	txt += "</div>";
+	
+	pinfo.innerHTML += txt;
+	event.stopPropagation();
+    return false;
+}
+function showProperties(id,k,v){
+	event.stopPropagation();
+	item++;
+	//var pinfo = document.getElementById("pinfo" + id);
+	var txt = "";	
+	txt += "<div class='info'>";
+	txt += "<div id=key_" + item + " name='product"+id+"' contenteditable='true' class = 'prod' >"+k+"</div>";
+	txt += "<div id=val_" + item +  " name='attr"+id+"' contenteditable='true' class='prop'>"+v+"</div>";
+	txt += "</div>";
+	
+	//pinfo.innerHTML += txt;
+	event.stopPropagation();
+    return txt;
+}	
+
+function save(id){
+	// Here we will scan through all product attributes and their value
+	// Store them as JSON and then save them to column = 'info' in the product
+	
+	// Get all divs with name = 'product' and name='attr'
+	var p = document.getElementsByName('product'+ id);
+	var a = document.getElementsByName('attr'+ id);
+	var temp_info = {};
+	var inf = new Array();
+	
+	for(var i=0; i < p.length; i++){
+		if(a[i].innerHTML.trim().length > 0){
+			temp_info[p[i].innerHTML] = a[i].innerHTML;
+			
+			}
+	}
+	
+	inf.push(temp_info);	
+	info = JSON.stringify(inf);
+	
+	getData('table1','thead1','UPDATE t_item_tbl_c set info=\''+info+'\' where id='+id+' ;',4,1,102);
+	
+}
+function custom2(data){location.reload();}
+function errHndlr(){}
+</script>
+    
+</html>

@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+   
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/bootstrap-theme.min.css" rel="stylesheet">
+<link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link href="css/ordrReport.css" rel="stylesheet">
+
+<script src="js/moment.min.js"></script>   
+<script src="js/jquery-1.10.2.js"></script>
+<script src="./assets/js/bootstrap.min.js"></script>
+<script src="./assets/js/bootstrap-datetimepicker.min.js"></script>
+<style>
+.product {
+font-size:9px;
+font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
+color: rgb(72, 72, 72) !important;
+letter-spacing: 0.5px !important;
+}
+.code {
+font-size:9px;
+font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
+color: #008489;
+letter-spacing: 0.5px !important;
+}
+
+.productval
+{
+border-bottom: 1px solid #BDC3C7;
+border-right: 1px solid #BDC3C7;
+padding-left:5px;
+font-weight:100;
+font-size:9px;
+font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
+color: rgb(72, 72, 72) !important;
+letter-spacing: 0.5px !important;
+}
+.order {
+	font-weight: 300 !important;
+	color: #484848 !important;
+	border-color: #D35400;
+	color: #D35400;
+	width:29%;
+	padding-top:2px;
+	padding-bottom:2px;	
+}
+</style>
+<link href="assets/css/font-awesome.min.css" rel="stylesheet">
+    <title>View Order Details</title>
+	<script> var c=0;</script>
+</head>
+
+<body >
+
+
+<nav class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom:5px;">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="index.html">Manage Orders</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="index.html">&nbsp;Home</a></li>
+        <li class="dropdown">
+		  <a href="index.html" onclick="localStorage['eid']='';localStorage.setItem('ordr', '');;document.location='index.html'">&nbsp;&nbsp;Logout</a>
+        </li>
+      </ul>
+      
+    </div>
+  </div>
+</nav>
+
+<div class="content" id='mainbody'>
+	<br>
+			<div class="panel panel-default">
+                <div class="panel-heading" id='phead' style='background:#265a88;color:white;text-align:center;padding-top:40px;padding-bottom:5px;'><b>Unprocessed Orders</b></div>
+				<div class="panel-body">
+                    <ul class="chat" id="chat">
+                                             
+                    </ul>
+				</div>
+			</div>
+				
+	</div>
+</div>	
+<div class="panel-footer stickyfooter icon-bar" id="panel-footer">
+                 <div class="icon-bar">			
+					<div id="btn-chat" class="" onclick="highlightIcon(this);viewStock()"><i id="btn-chat_i" class="fa fa-area-chart icon-def"><p class="icontitle">STOCK</p></i></div>
+					<div id="btn-back" class="" onclick="highlightIcon(this);showRawOrder(data_raw);"><i id="btn-back_i" class="fa fa-shopping-cart icon-def"><p class="icontitle">RAW</p></i></div>
+					<div id="btn-confirm" class="" onclick="highlightIcon(this);showCNFOrder(data_raw);"><i id="btn-confirm_i" class="fa fa-shopping-cart icon-def cnf" ><p class="icontitle">CNF</p></i></div>
+					<div id="btn-rsvd" class="" onclick="highlightIcon(this);showRSVDOrder(data_raw);"><i id="btn-rsvd_i" class="fa fa-shopping-cart icon-def" style="color:#68C3A3;"><p class="icontitle">RSVD</p></i></div>
+					<div id="btn-mfg" class="" onclick="highlightIcon(this);displayMFG(data_raw);"><i id="btn-mfg_i" class="fa fa-shopping-cart icon-def" style="color:#6BB9F0;"><p class="icontitle">TO MFG</p></i></div>
+					<div id="btn-cpt" class="" onclick="highlightIcon(this);showDispatch(data_dispatched);"><i id="btn-cpt_i" class="fa fa-shopping-cart icon-def" style="color:#777;"><p class="icontitle">COMPLETED</p></i></div>
+				</div>
+			</div>
+</div>
+</body>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/dataTbl.js"></script>
+
+
+<script>
+	var data_stock = {};
+	var data_raw = {};
+	var data_dispatched = {};
+	// temp stock variable. Once allocation is saved this will replace data_stock
+	var initial_stock = {}; 
+	
+	
+	var list_for_prsng = [];
+	var allocate_id = []; // holds ids of allocated orders
+	
+	document.getElementById("chat").innerHTML = "";
+	getRawOrder(150);
+	
+	var list_for_prsng = []; 
+	var allocate_id = []; // holds ids of allocated orders
+	
+	document.getElementById("chat").innerHTML = "";
+	
+	var stock = [];
+	var ordr = {};
+	var ordr_history = {};
+	
+	
+	function getRawOrder(p){
+	
+		getData('','',"SELECT m.id,m.did,d.firmname,m.discussion,m.ordr,m.ordr_p, m.mdate, m.status, a.name, m.cnf_dt,m.rsvd_dt,m.dispatch_dt from t_meeting_tbl m, t_dealer_tbl d, t_agent_tbl a where d.did = m.did and d.agentid = a.id and m.status >= 0  order by m.mdate desc ;",0,0,p);
+	}
+	function getStockData(p){
+		getData('','',"Select * from t_item_tbl;",0,0,p);
+	}
+	
+	function getDispatchedOrder(p){
+		getData('','',"SELECT m.id,m.did,d.firmname,m.discussion,m.ordr_p as ordr, m.mdate, a.name,  m.cnf_dt,m.rsvd_dt,m.dispatch_dt,m.dispatch_details from t_meeting_tbl m, t_dealer_tbl d, t_agent_tbl a where d.did = m.did and d.agentid = a.id and m.status>=10 order by m.mdate desc LIMIT 20 ;",0,0,p);
+	}
+	
+	function custom(data,p){
+		if(p==150){
+			data_raw = data;
+			getStockData(151);
+			flag_raw = 0;
+			}
+		else if(p==151){
+			data_stock = data;
+			localStorage["stock"] = JSON.stringify(data_stock);
+			showRawOrder(data_raw);
+			getDispatchedOrder(152);
+			flag_stock = 0;
+			}
+		else if(p==152){
+			data_dispatched = data;	
+			getOH(data_raw);
+			
+			flag_dispatched = 0;
+			}		
+		else if(p==103){	
+			data_raw = data;
+			showCNFOrder(data_raw);
+			}
+		else if(p==101) // coming from saving allocation. need to update rawdata and stock
+			{	
+				data_stock = JSON.parse(JSON.stringify(data));
+				getRawOrder(160);
+			}
+		else if(p==160)
+			{
+			data_raw = data;
+			showRSVDOrder(data_raw);
+			}	
+		else if(p==104)
+			getRawOrder(103);
+		else if(p==105)
+			showRSVDOrder(data);
+		else if(p==110)
+			showDispatch(data);	
+		else if(p==111){
+			data_stock = data;
+			//getAllStock(data);
+			viewStock();
+		}
+		else if(p==170){
+			data_dispatched = data;
+			showDispatch(data_dispatched);	
+			getAllOrdr(data_raw);// update orders
+			getRawOrder(171);
+			}
+		else if(p==171)
+			data_raw = data;	
+		else if(p==175){
+			data_dispatched = data;
+			showDispatch(data_dispatched);	
+		}	
+	}
+	
+	
+	function getStock(id){
+		var st = data_stock;
+		for(var i=0;i< st.length; i++){
+		var s = st[i]["code"] + "-" + st[i]["name"];
+			if(s == id)
+				return st[i]["stock"];
+		}
+		return 0;
+	}
+	
+	function getAllOrdr(data){
+		for (var i = 0; i < data.length; i++) {
+			if(data[i]['ordr_p'].trim().length > 2){
+				ordr[data[i]['id']] = data[i]['ordr_p'];
+			}
+		}
+	}
+// get order history
+function getOH(data){
+
+	for (var i = 0; i < data.length; i++) {
+		if(data[i]['ordr'].trim().length > 2){
+			ordr_history[data[i]['id']] = [data[i]['mdate'],data[i]['cnf_dt'], data[i]['rsvd_dt'],data[i]['dispatch_dt']];
+		}
+	}
+}
+
+function editOrder(id,data){
+	localStorage["editOrdr"] = JSON.stringify(data);
+	window.location.href = "editOrder.html?id=" + id;
+}
+
+function showRawOrder(data){
+	 list_for_prsng = []; //everytime clean old list of selected items	
+	getAllOrdr(data);
+	document.getElementById("phead").innerHTML = "<b>Un-Processed Orders</b><i class='fa fa-refresh pull-left' onclick='getRawOrder(150);' style='    font-size: 18px;padding-right: 3px;'></i><i class='fa fa-save pull-right' onclick='toMfg();' style='    font-size: 18px;padding-right: 3px;'></i>";
+	var chat = document.getElementById("chat");
+	var msg = "";
+	var flg =0;
+				
+		for (var i = 0; i < data.length; i++) {
+			var did = data[i]['did'] ;
+			
+			if(data[i]['ordr'].trim().length > 2 && data[i]['status']== 0){flg=1;
+			msg += "<li id='m_"+data[i]['id']+"' class='left clearfix' >";
+			msg += "<div class='row' style='margin-left:4px;margin-right:4px;'>";
+			msg += "<div class='col-xs-5 product' name='pcode' >FIRM : " + data[i]['firmname'] + "</div>";
+			msg += "<div class='col-xs-5 product' name='pcode' >AGENT : "+data[i]['name']+"</div>";
+			msg += "<div class='col-xs-2 code' name='pcode' style='text-align:center;' ><button id=sel_"+data[i]['id']+" class='btn btn-warning btn-sm  sel' style='height:15px;padding-bottom:0px;font-size:10px;padding-top:0px;'  onclick='selectOrdr(this)'>Select</button></div>";			
+			msg += "</div>";
+			
+			msg += "<div class='row' style='margin-left:4px;margin-right:4px;'>";
+			msg += "<div class='col-xs-2 code' name='pcode' >" + formatDateY(data[i]['mdate']) + "</div>";
+			
+			msg += "<div class='col-xs-2 code' name='pcode' >Orders</div>";
+			msg += "<div class='col-xs-1 code' name='pcode' ><small>QTY</small></div>";
+			msg += "<div class='col-xs-3 code' name='pcode' >Prod Map</div>";
+			msg += "<div class='col-xs-3 code' name='pcode' ></div>";
+			msg += "<div class='col-xs-1 code' name='pcode' >Stock<br></div>";
+			msg += "</div>";
+			
+			msg += "<div class='row' style='margin-left:4px;margin-right:4px;'>";
+			msg += "<div class='col-xs-1 product' name='pcode' ><span style='font-size:12px;color:black;'>&nbsp;<i id='users' class='fa fa-edit' onclick='editOrder("+data[i]['id']+","+JSON.stringify(data[i])+");'></i></span></div>";
+			msg += "<div class='col-xs-4 product' name='pcode' >"+displayOrdr(JSON.parse(data[i]['ordr']))+"</div>";
+			if(data[i]['ordr_p']!=null && data[i]['ordr_p'].trim().length > 0)
+				msg += "<div class='col-xs-7 product' name='pcode'  >"+displayOrdr(JSON.parse(data[i]['ordr_p']),1)+"</div>";
+			else
+				msg += "<div class='col-xs-7 product' name='pcode'  ></div>";
+			
+			
+			msg += "</div></li>";
+			}
+			
+		}
+		chat.innerHTML = msg;
+		if(flg==0)
+			noOrdrMsg();
+			
+		// Update bottom icon tray
+	document.getElementById("btn-chat_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-back_i").style.backgroundColor  = "#E4F1FE";
+	document.getElementById("btn-confirm_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-rsvd_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-mfg_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-cpt_i").style.backgroundColor  = "#f5f5f5";
+
+	// keep pinging every 60 section
+    //setTimeout(function(){ getRawOrder(150); }, 60000);	
+}	
+ function displayOrdr(data,f){
+	var ordr = "<span>";
+	for (var i = 0; i < data.length; i++) {
+			if(f==1){
+				ordr += "<b class='pull-right stock stock1' style='padding-right:5px;color:#3e8f3e;'>" + getStock(data[i]["item"]) + "</b>"; //stock
+				ordr += data[i]["item"] ;
+			}
+			else if(f==2)// show both order and stock
+			{
+				ordr += data[i]["item"] ;
+				
+			}
+			else if(f==3)// show both order and stock
+			{
+				
+				ordr += "<b class='pull-right stock stock1' style='padding-right:5px;color:#3e8f3e;'>" + getStock(data[i]["item"]) + "</b>"; //stock
+				ordr += "<b class='pull-right ordr' >" + data[i]["qty"] + "</b>"; //ordr
+			}
+			else if(f==4)// show both order and stock
+			{
+				ordr += "<b class=' ordr' >" + data[i]["qty"] + "</b>"; //ordr
+				
+			}
+			else{
+			ordr += data[i]["item"] ;
+			
+			ordr += "<b class='pull-right ordr' >" + data[i]["qty"] + "</b>"; //ordr
+			
+		    }
+		ordr +="<br>";
+	}	
+	ordr += "</span>";
+	return ordr;
+ }
+ 
+ // Show orders on reserved order page
+ function displayOrdr1(data){
+	var ordr = "<span>";
+	for (var i = 0; i < data.length; i++) {
+		
+			ordr += data[i]["item"] ;
+			//ordr += "<b class='pull-right stock stock1' style='padding-right:5px;color:#3e8f3e;'>" + getStock(data[i]["item"]) + "</b>"; //stock
+			ordr += "<b class='pull-right ordr' >" + data[i]["qty"] + "</b>"; //ordr
+			
+		
+		ordr +="<br>";
+	}	
+	ordr += "</span>";
+	return ordr;
+ }
+	
+function formatDateY(dt){
+	if(dt == null) return "Sending..";
+	try{
+		var dateObj = new Date(dt);
+		var month = dateObj.getMonth() + 1; //months from 1-12
+		var day = dateObj.getDate();
+		var m = dateObj.getMinutes();
+		
+			newdate =  getM(month) + " " + day + " " ;
+				
+		return newdate;
+	} catch(e){return dt;}
+}
+
+function viewdealer(did){
+	var chat = document.getElementById("chat").innerHTML;
+	localStorage.setItem("ordr", chat);
+	window.location.href = "viewdealer1.html?did=" + did;
+}
+
+function getM(m){
+ if(m==1)
+ 	return "Jan";
+ else if(m==2)
+    return "Feb";
+ else if(m==3)
+    return "Mar"; 
+ else if(m==4)
+    return "Apr";  
+ else if(m==5)
+    return "May"; 
+ else if(m==6)
+    return "Jun";   
+ else if(m==7)
+    return "Jul"; 
+ else if(m==8)
+    return "Aug";  
+ else if(m==9)
+    return "Sep";  
+ else if(m==10)
+    return "Oct"; 
+ else if(m==11)
+    return "Nov";
+ else if(m==12)
+    return "Dec";     
+
+}
+	
+	function getRandomColor(sid) {
+  var colors = ["ff6347","ff00ff","ff0080","00cc00","ff6347","55C1E7","003399","990033","ff6347","55C1E7"];
+  var toText = sid.toString(); //convert to string
+  var lastChar = toText.slice(-1); //gets last character
+  var lastDigit = +(lastChar); 
+  
+  return colors[lastDigit];
+}
+
+function formateDt(dt){
+   var date = new Date(dt);
+	var day = date.getDate();
+  var monthIndex = date.getMonth() + 1;
+  var year = date.getFullYear();
+  
+  if(monthIndex < 10)
+	monthIndex = "0" + monthIndex;
+  if(day < 10)
+	day = "0" + day;		
+  
+  return year+"-"+monthIndex+"-"+day;
+}
+
+function toMfg(){
+	if(list_for_prsng.toString().length > 0){
+			var now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+			getData('','',"UPDATE t_meeting_tbl set status =1 , cnf_dt= '"+now+"' where id in ("+ list_for_prsng.toString() + ");",0,0,104);
+			// refresh data here  104-->getRawOrder(102)
+	}
+	else	
+		showCNFOrder(data_raw);
+}
+function errHndlr(msg,p){
+	if(p==104){
+		getRawOrder(103);
+		list_for_prsng = [];
+	}
+	else if(p==102){
+		noOrdrMsg();
+	}
+	else if(p==103){
+		showCNFOrder();
+		noOrdrMsg();
+	}
+	else if(p==104)
+		getRawOrder(103);
+	else if(p==105){
+		document.getElementById("phead").innerHTML = "<b>Reserved Orders</b>";
+		noOrdrMsg();
+	}	
+	else if(p==110){
+		document.getElementById("phead").innerHTML = "<b>Dispatched Orders</b>";
+		noOrdrMsg();
+	}	
+	else if(p==113)
+		getData('','',"Select * from t_item_tbl;",0,0,111);
+	else if(p==121){
+		getDispatchedOrder(175);
+	}
+	else if(p==150)
+		getStockData(151);
+}
+
+function noOrdrMsg(){
+	var chat = document.getElementById("chat");
+	chat.innerHTML = "";
+	var msg = "";
+		msg += "<div class='chat-body clearfix'>";
+		msg += "<span class='text-muted col-xs-9' style='font-size:14px;text-align:center;'>No Orders in this Category</span></div>";
+		chat.innerHTML = msg;
+}
+
+
+
+function showCNFOrder(data){
+	document.getElementById("phead").innerHTML = "<b>Under Processing</b><i class='fa fa-save pull-right' onclick='reserveIt();'></i>";
+	
+	if(typeof data == 'undefined'){
+		noOrdrMsg();
+		return;
+	}
+	
+	var chat = document.getElementById("chat");
+	chat.innerHTML = "";
+		var msg = "";
+				
+		for (var i = 0; i < data.length; i++) {
+			var did = data[i]['did'] ;
+			
+			if(data[i]['ordr'].trim().length > 2  && data[i]['status']== 1){
+				msg += "<li id='m_"+data[i]['id']+"' class='left clearfix' >";
+				msg += "<div class='row' style='margin-left:4px;margin-right:4px;'>";
+				msg += "<div class='col-xs-2 product' >" + formatDateY(data[i]['mdate']) + "</div>";
+				msg += "<div class='col-xs-5 product' >" + data[i]['firmname'] + "</div>";
+				msg += "<div class='col-xs-1 product' ></div>";
+				msg += "<div class='col-xs-1 product' >Order</div>";
+				msg += "<div class='col-xs-3 product' >Stock</div>";
+				msg += "</div>";
+				
+				msg += "<div class='row' style='margin-left:4px;margin-right:4px;'>";
+				msg += "<div class='col-xs-2 product' ><i id='back0_"+data[i]['id']+"' class='fa fa fa-rotate-left' onclick=goback(this)></i></span></div>";
+				msg += "<div class='col-xs-6 product' >" + displayOrdr(JSON.parse(data[i]['ordr_p']),2) + "</div>";
+				msg += "<div class='col-xs-2 product' >" + displayOrdr(JSON.parse(data[i]['ordr_p']),3) + "</div>";
+				msg += "<div class='col-xs-2 product' ><button id='"+data[i]['id']+ "' class='btn btn-warning btn-sm  allocate' style='height:15px;padding-bottom:0px;padding-top:0px;font-size:10px;'  onclick=''>Allocate</button></div>";
+				msg += "</div>";
+				
+				msg += "</li>";
+			
+			}
+			
+		}
+		chat.innerHTML = msg;
+		
+		// Add event listener on class allocate
+		var classname = document.getElementsByClassName("allocate");
+		
+		for (var i = 0; i < classname.length; i++) {
+			classname[i].addEventListener('click', allocate, false);
+		}
+		
+		// Update bottom icon tray
+	document.getElementById("btn-chat_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-back_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-confirm_i").style.backgroundColor  = "#E4F1FE";
+	document.getElementById("btn-rsvd_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-mfg_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-cpt_i").style.backgroundColor  = "#f5f5f5";
+	
+}	
+
+var allocate = function() {
+		var id = this.getAttribute("id");
+		//if already selected remove selection
+		if(document.getElementById(id).value == 1){
+			document.getElementById(id).value = 0;
+			showCNFOrder(data_raw);
+		}	
+		else{	
+			allocateStock(id);
+			
+			}
+	};
+	
+	var success = 0 ;
+	
+	function allocateStock(id){
+		
+		success = 0;
+		initial_stock = JSON.parse(JSON.stringify(data_stock));
+		
+		var odr = JSON.parse(ordr[id]);
+		for (var i=0;i < odr.length; i++){
+			doAllocate(odr[i]["item"].split("-")[0],odr[i]["qty"]);
+		}
+		
+	    if(success == 0){
+			// Temp display CNF screen with updated stock
+			// This stock is not conformed till allocation is saved.
+			// Stock will actually be saved and data_stock will be updated upon save only
+			
+		    var tmp = JSON.parse(JSON.stringify(data_stock));
+			data_stock = JSON.parse(JSON.stringify(initial_stock));
+			showCNFOrder(data_raw);
+			// retain value of initial stock
+			initial_stock = JSON.parse(JSON.stringify(data_stock));
+			data_stock = JSON.parse(JSON.stringify(tmp));
+					
+			document.getElementById("m_"+id).style.backgroundColor = "#ECF0F1";
+			document.getElementById(id).value = 1;
+		
+			allocate_id.push(id);
+			
+		}
+	}
+
+	function doAllocate(id,qty){
+		var s = initial_stock;
+		for (var i=0;i < s.length; i++){
+	
+			if(s[i]["code"].trim() == id)
+				if((s[i]["stock"] - qty) > 0)
+					s[i]["stock"] = s[i]["stock"] - qty ;
+				else
+					success =1;	
+		}
+		initial_stock = s;
+	}
+
+
+function selectOrdr(ele){
+	 var id = ele.getAttribute("id").replace("sel_","");
+	 //Check if already selected
+	 if(list_for_prsng.indexOf(id) > -1){
+		document.getElementById("m_"+id).style.backgroundColor = "#fff";
+		var index = list_for_prsng.indexOf(id);
+		list_for_prsng.splice(index, 1);
+		list_for_prsng.filter(Boolean);
+	}else {
+		document.getElementById("m_"+id).style.backgroundColor = "#ECF0F1";
+		list_for_prsng.push(id);
+	 }
+}
+
+function goback(ele){
+	var id = ele.getAttribute('id');
+	if(id.indexOf("back0_") !== -1){ //go to  unprosessed state (CNF --> RAW)
+		id = id.replace("back0_","");
+		getData('','',"UPDATE t_meeting_tbl set status =0 where id ="+id+";",0,0,104);
+	}
+	else if(id.indexOf("back1_") !== -1){ //go to  under prosessed state (RSVD --> CNR)
+		id = id.replace("back1_","");
+		//getData('','',"UPDATE t_meeting_tbl set status =1 where id ="+id+";",0,0,104);
+		//update stock here
+		unReserveIt(id,"RSVD2CNF");
+	}
+}
+
+function viewStock(){
+	var st = data_stock;
+	document.getElementById("phead").innerHTML = "<b>View/Edit Stock</b>";
+	//document.getElementById("phead").style.backgroundColor = "#e38d13";
+	var chat = document.getElementById("chat");
+	chat.innerHTML = "";
+	var msg = "";
+	
+	for (var i=0;i < st.length; i++){
+		var id = st[i]['id'];
+		msg += "<li  class='left clearfix' id='"+id+"' >";
+		msg += "<div class='row' style='margin-left:4px;margin-right:4px;'>";
+		msg += "<div class='col-xs-7 code' id='code_"+i+"'>" +st[i]["code"] + "-" + st[i]["name"]+ "</div>";
+		msg += "<div class='col-xs-2 ' id='st_"+i+"' contenteditable=true>" +st[i]["stock"]+ "</div>";
+		msg += "<div class='col-xs-3 ' style='text-align:center;'><button class='btn btn-sm ' onclick='updateStock("+id+","+i+");'>Save</button></div>";
+		
+		msg += "</div></li>";
+	}
+	chat.innerHTML = msg;
+}
+function updateStock(sid,id){
+	var qty = document.getElementById("st_" + id).innerHTML.trim();
+	var prd = document.getElementById("code_" + id).innerHTML.trim().split("-");
+	var code = prd[0];
+	var name = prd[1];
+		
+	var chat =	document.getElementById(sid);
+	var txt = "<li id='xx"+id+"' class='left clearfix' ><div class='product'>You are about to update stock for <b>"+document.getElementById("code_" + id).innerHTML.trim()+"</b> to "+qty+". Continue?</div><br><button class='btn btn-sm order' onclick='upordr("+sid+","+id+")'>Yes,Update</button>&nbsp;&nbsp;<button class='btn btn-sm order' onclick='viewStock();'>Cancel</button> </li>";
+	chat.innerHTML = txt + chat.innerHTML;
+	
+}
+
+function upordr(sid,id){
+	var qty = document.getElementById("st_" + id).innerHTML.trim();
+	var prd = document.getElementById("code_" + id).innerHTML.trim().split("-");
+	var code = prd[0];
+	var name = prd[1];
+	//var sql = "UPDATE t_item_tbl set stock=" + qty + " where code='" + code + "' and name='" + name + "' ;";
+	var sql = "UPDATE t_item_tbl set stock=" + qty + " where id="+sid+";";
+	var parent =	document.getElementById(sid);
+	var child = document.getElementById("xx"+id);
+	parent.removeChild(child);
+	getData('','',sql,0,0,113);
+}
+function highlightIcon(ele)
+{
+	
+	document.getElementById("btn-chat_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-back_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-confirm_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-rsvd_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-mfg_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-cpt_i").style.backgroundColor  = "#f5f5f5";
+	
+	var id = ele.getAttribute("id") + "_i";
+	document.getElementById(id).style.backgroundColor  = "#E4F1FE";
+}
+
+
+function showRSVDOrder(data){
+	document.getElementById("phead").innerHTML = "<b>Reserved Orders</b>";
+	var chat = document.getElementById("chat");
+	chat.innerHTML = "";
+		var msg = "";
+				
+		for (var i = 0; i < data.length; i++) {
+			var did = data[i]['did'] ;
+			
+			if(data[i]['ordr'].trim().length > 2 && data[i]['status']== 2){
+				msg += "<li id='m_"+data[i]['id']+"' class='left clearfix' >";
+				msg += "<div class='row' style='margin-left:4px;margin-right:4px;'>";
+				msg += "<div class='col-xs-2 product' >" + formatDateY(data[i]['mdate']) + "</div>";
+				msg += "<div class='col-xs-6 product' >" + data[i]['firmname'] + "</div>";
+				msg += "<div class='col-xs-2 product' >Order</div>";
+				msg += "<div class='col-xs-2 product' ></div>";
+				
+				msg += "</div>";
+				
+				msg += "<div class='row' style='margin-left:4px;margin-right:4px;'>";
+				msg += "<div class='col-xs-2 product' ><i id='back1_"+data[i]['id']+"' class='fa fa fa-rotate-left' onclick=goback(this)></i></span></div>";
+				msg += "<div class='col-xs-6 product' >" + displayOrdr(JSON.parse(data[i]['ordr_p']),2) + "</div>";
+				msg += "<div class='col-xs-2 product' >" + displayOrdr(JSON.parse(data[i]['ordr_p']),4) + "</div>";
+				msg += "<div class='col-xs-2 product' ><button id='dispatch_"+data[i]['id']+"' class='btn btn-sm pull-right' onclick='dispatch(this);'>Dispatch</button></div>";
+				msg += "</div>";
+				
+				msg += "</li>";
+			
+			}
+			
+		}
+		chat.innerHTML = msg;
+		
+		// Update bottom icon tray
+	document.getElementById("btn-chat_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-back_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-confirm_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-rsvd_i").style.backgroundColor  = "#E4F1FE";
+	document.getElementById("btn-mfg_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-cpt_i").style.backgroundColor  = "#f5f5f5";
+		
+		
+}
+
+// Save allocated orders. This will save :
+//	 1)  Order from under processing to Reserved
+//	 2)  Update Stocks to reflect reserved items 
+function reserveIt(){
+	//alert(localStorage["stock"]);
+	//Use allocate_id for list of ids to be moved to reserved
+	//clear allocate_id post success
+	var sql = "stock=" + JSON.stringify(initial_stock) + "&ids=" + JSON.stringify(allocate_id) + "&opr=CNF2RSVD";
+	var req = new XMLHttpRequest();
+	req.onreadystatechange = function() {
+		if (req.readyState == 4 && req.status == 200) {
+			try {
+				//alert(req.responseText);
+				allocate_id = [];
+				// get fresh stock
+				setTimeout(getData('','',"Select * from t_item_tbl;",0,0,101), 500);
+				// refresh under processing tally
+				
+									
+			} catch (e) {			
+				console.log("Exception::-"+e.toString());
+
+			}
+		}
+	};
+	
+	req.open("GET", base_url + "/reserveOrdr.php?" + sql , true);
+	req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	if(allocate_id.length > 0)
+		req.send();
+}
+
+//    Move back orders from Reserved to underprocessing :
+//	 1)  Order from under RSVD to CNF
+//	 2)  Update Stocks to reflect reserved items 
+function unReserveIt(id,opr){
+	var o = JSON.parse(ordr[id]);
+	var sql = "stock=" + ordr[id] + "&ids=" + id + "&opr=" + opr;
+	var req = new XMLHttpRequest();
+	req.onreadystatechange = function() {
+		if (req.readyState == 4 && req.status == 200) {
+			try {
+				
+				// refresh under processing tally
+				if(opr == "RSV2DISP")
+					getDispatchedOrder(170);
+				else
+					setTimeout(getData('','',"Select * from t_item_tbl;",0,0,101), 500); // get fresh stock
+						
+									
+			} catch (e) {			
+				console.log("Exception::-"+e.toString());
+			}
+		}
+	};
+	//alert(sql);
+	req.open("GET", base_url + "/reserveOrdr.php?" + sql , true);
+	req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	if(id.length > 0)
+		req.send();
+}
+
+function displayMFG(data){
+document.getElementById("phead").innerHTML = "<b>Under Production</b>";
+var products = {};
+
+//loop through all orders and update order list
+for (var i = 0; i < data.length; i++) {
+   if(data[i]['status'] ==1){
+	var tmp = JSON.parse(data[i]['ordr_p']);
+	for(var j =0; j < tmp.length; j++){
+		if(isNaN(products[tmp[j]["item"]]) )
+			products[tmp[j]["item"]] = 0;
+		products[tmp[j]["item"]] +=  +tmp[j]["qty"];
+	}
+	}
+}
+
+var chat = document.getElementById("chat");
+	chat.innerHTML = "";
+	var msg = "";
+	msg += "<li  class='left clearfix' style='background-color: #fcf8e3;height:40px;padding-top: 10px;margin-top:-12px;margin-left:-12px;margin-right:-12px;'>";
+		msg += "<div class='chat-body clearfix' style='margin-left:10px;'>";
+		msg += "<span class='text-muted ' style='font-size:10px;padding-left:12px;'>Product<span class='pull-right text-muted' style='font-size:10px;'>For Prod/In Stock&nbsp;&nbsp;&nbsp;&nbsp;</span><span class='pull-right'>&nbsp;&nbsp;</span>";
+		msg += "</div></li>";
+	
+	for (var key in products){
+		
+		msg += "<li  class='left clearfix' >";
+		msg += "<div class='chat-body clearfix' style='margin-left:10px;'>";
+		msg += "<span class='text-muted ' style='font-size:10px;'>"+key+"<span class='pull-right' style='font-size:12px;'><b>"+products[key]+ "</b>/<span style='color:green;font-size:10px;'>" + getStock(key) +"&nbsp;&nbsp;&nbsp;&nbsp;</span></span><span class='pull-right'>&nbsp;&nbsp;</span>";
+		msg += "</div></li>";
+	}
+	chat.innerHTML = msg;
+
+}
+
+// This order will be disacthce:
+// 1) Status will be changed to 10.
+// 2) Not changing stock right now as stock has already been reduced when we reserved it
+function dispatch(ele){
+	var id = ele.getAttribute('id').replace("dispatch_","");
+	var li = document.getElementById("m_" + id).style.backgroundColor = "#f5f5f5";
+	var chat =	document.getElementById('chat');
+	var txt = "<li id='' class='left clearfix' ><div class='product'>You are about to Dispatch selected order, it will be visible to Customer.</div><br><button class='btn btn-sm order' onclick=posxx('"+id+"')>Yes,Dispatch it</button>&nbsp;&nbsp;<button class='btn btn-sm order' onclick=document.getElementById('btn-rsvd').click();>Cancel</button> </li>";
+	chat.innerHTML = txt + chat.innerHTML;
+	
+	//unReserveIt(id,"RSV2DISP");
+}
+function posxx(id){unReserveIt(id,"RSV2DISP");}
+function dispatched(){
+	getData('','',"SELECT m.id,m.did,d.firmname,m.discussion,m.ordr_p as ordr, m.mdate, m.dispatch_details, a.name from t_meeting_tbl m, t_dealer_tbl d, t_agent_tbl a where d.did = m.did and d.agentid = a.id and m.status >=10  order by m.mdate desc LIMIT 20 ;",0,0,110);
+}
+function showDispatch(data){
+getOH(data);
+document.getElementById("phead").innerHTML = "<b>Dispatched Orders</b>";
+	var chat = document.getElementById("chat");
+	chat.innerHTML = "";
+		var msg = "";
+				
+		for (var i = 0; i < data.length; i++) {
+			var did = data[i]['did'] ;
+			
+			if(data[i]['ordr'].trim().length > 2){
+			msg += "<li id='m_"+data[i]['id']+"' class='left clearfix' style='background-color:#DADFE1;margin-top:-12px;margin-left:-12px;margin-right:-12px; padding-top:10px;'><span class='chat-img pull-left' style='font-size:14px;color:green;'>&nbsp;&nbsp;";
+			msg += formatDateY(data[i]['mdate']) + "<br><span style='font-size:12px;color:black;'>&nbsp;</span></span>";
+			
+			msg += "<div class='chat-body clearfix'>";
+			msg += "<span class='text-muted col-xs-11' style='font-size:10px;margin-right: 10px'><strong class='primary-font' style='font-size:10px;padding-bottom:8px;text-transform: uppercase;'>"+ data[i]['firmname'] + "</strong><span class='pull-right'>Order&nbsp;&nbsp;</span>";
+			
+			msg += "<br>" + displayOrdr1(JSON.parse(data[i]['ordr'])) + "</span>" ;
+			msg += "&nbsp;&nbsp;";
+			msg += "</div><br>"+ordrHistory(data[i]['id'])+"<br><br>";
+			
+			// dispatch details to be filled by operator
+			var name = "invc_d"+data[i]['id'];	
+			if(data[i]['dispatch_details']!=null && data[i]['dispatch_details'].trim().length>2){
+				//alert(data[i]['dispatch_details']);
+				var obj = JSON.parse(data[i]['dispatch_details']);
+				
+				
+				msg += "<div class='row' style='margin-left:4px;margin-right:4px;padding-left:20px;margin-top:30px;'>";
+				msg += "<div class='col-xs-4 code' >INVOICE NAME</div>";
+				msg += "<div class='col-xs-4 code' >INVOICE DATE</div>";
+				msg += "<div class='col-xs-4 code' >GR NO.</div>";
+				msg += "<div class='col-xs-4 product' name='"+name+"' contenteditable=true>"+ obj["invoice"] +"</div>";
+				msg += "<div class='col-xs-4 product' name='"+name+"' contenteditable=true>"+ obj["invoicedt"] +"</div>";
+				msg += "<div class='col-xs-4 product' name='"+name+"' contenteditable=true>"+ obj["gr"] +"</div>";
+				msg += "</div>";
+				
+				msg += "<div class='row' style='margin-left:4px;margin-right:4px;padding-left:20px;'>";
+				msg += "<div class='col-xs-4 code' >TRUCK NO.</div>";
+				msg += "<div class='col-xs-4 code' >FREIGHT</div>";
+				msg += "<div class='col-xs-4 code' >DRIVER NO.</div>";
+				msg += "<div class='col-xs-4 product' name='"+name+"' contenteditable=true>"+ obj["truck"] +"</div>";
+				msg += "<div class='col-xs-4 product' name='"+name+"' contenteditable=true>"+ obj["freight"] +"</div>";
+				msg += "<div class='col-xs-4 product' name='"+name+"' contenteditable=true>"+ obj["driver"] +"</div>";
+				msg += "</div>";
+				
+			}else{
+				msg += "<div class='row' style='margin-left:4px;margin-right:4px;padding-left:20px;margin-top:30px;'>";
+				msg += "<div class='col-xs-4 code' >INVOICE NAME</div>";
+				msg += "<div class='col-xs-4 code' >INVOICE DATE</div>";
+				msg += "<div class='col-xs-4 code' >GR NO.</div>";
+				msg += "<div class='col-xs-4 productval' name='"+name+"' contenteditable=true></div>";
+				msg += "<div class='col-xs-4 productval' name='"+name+"' contenteditable=true></div>";
+				msg += "<div class='col-xs-4 productval' name='"+name+"' contenteditable=true></div>";
+				msg += "</div>";
+				
+				msg += "<div class='row' style='margin-left:4px;margin-right:4px;padding-left:20px;'>";
+				msg += "<div class='col-xs-4 code' >TRUCK NO.</div>";
+				msg += "<div class='col-xs-4 code' >FREIGHT</div>";
+				msg += "<div class='col-xs-4 code' >DRIVER NO.</div>";
+				msg += "<div class='col-xs-4 productval' name='"+name+"' contenteditable=true></div>";
+				msg += "<div class='col-xs-4 productval' name='"+name+"' contenteditable=true></div>";
+				msg += "<div class='col-xs-4 productval' name='"+name+"' contenteditable=true></div>";
+				msg += "</div>";
+			}
+			msg += "<div class='row' style='margin-left:4px;margin-right:4px;padding-left:20px;'>";
+			msg += "<button id='disp_details"+data[i]['id']+"' class='btn btn-sm pull-right order' onclick='savedd("+data[i]['id']+");'>save</button>";
+			msg += "</div>";
+			
+			msg += "</li>";
+			}
+			
+		}
+		chat.innerHTML = msg;
+		
+	// Update bottom icon tray
+	document.getElementById("btn-chat_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-back_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-confirm_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-rsvd_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-mfg_i").style.backgroundColor  = "#f5f5f5";
+	document.getElementById("btn-cpt_i").style.backgroundColor  = "#E4F1FE";
+}
+
+function ordrHistory(id){
+    var msg =  "<div class='chat-body1 clearfix text-muted col-xs-12'><span class='oh col-xs-3'>Received</span><span class='oh col-xs-3'>Confirmed</span><span class='oh col-xs-3'>Reserved</span>    <span class='oh col-xs-3'>Dispatched</span></div>";
+	msg += "<div class='chat-body1 clearfix text-muted col-xs-12 timeline-horizontal'><span class='oh_tl col-xs-3'><i class='fa fa-check-circle' style='color:green'></i></span><span class='oh_tl col-xs-3'><i class='fa fa-check-circle' style='color:green'></i></span><span class='oh_tl col-xs-3'><i class='fa fa-check-circle' style='color:green'></i></span><span class='oh_tl_last col-xs-3'><i class='fa fa-check-circle' style='color:green'></i></span></div>";
+	 msg += 	"<div class='chat-body1 clearfix text-muted col-xs-12'><span class='oh col-xs-3'>" +formatDateY(ordr_history[id][0]) + "</span><span class='oh col-xs-3'>" + formatDateY(ordr_history[id][1]) + "</span><span class='oh col-xs-3'>" + formatDateY(ordr_history[id][2]) + "</span><span class='oh col-xs-3'>" + formatDateY(ordr_history[id][3]) + "</span></div>";
+		return msg;
+}
+
+function savedd(id){
+	var name = "invc_d"+id;
+	var eles = document.getElementsByName(name);
+	var jsn = {};
+	
+	jsn['invoice'] = eles[0].innerHTML;
+	jsn['invoicedt'] = eles[1].innerHTML;
+	jsn['gr'] = eles[2].innerHTML;
+	jsn['truck'] = eles[3].innerHTML;
+	jsn['freight'] = eles[4].innerHTML;
+	jsn['driver'] = eles[5].innerHTML;
+	
+	getData('','',"UPDATE t_meeting_tbl set dispatch_details = '"+JSON.stringify(jsn)+"'  where id =" + id,0,0,121);
+}
+</script>
+
+
+ 
+</html>

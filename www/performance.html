@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+    <!-- Good default declaration:
+    * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+    * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+    * Disables use of eval() and inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+        * Enable inline JS: add 'unsafe-inline' to default-src
+        * Enable eval(): add 'unsafe-eval' to default-src
+    * Create your own at http://cspisawesome.com
+    -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
+	 <script src="./js/jquery.min.js"></script>
+	<script src="./assets/js/bootstrap.min.js"></script>
+	
+	<link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+	<link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+	<link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
+	<link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet" />
+	<link href="assets/css/demo.css" rel="stylesheet" />
+	
+	
+    <title>Performance</title>
+	<style>
+	.row {
+		margin-right: 0px;
+		margin-left: 0px;
+		}
+	.container-fluid {
+		padding-right: 0px;
+		padding-left: 0px;
+	}
+	.col-lg-1,
+.col-lg-10,
+.col-lg-11,
+.col-lg-12,
+.col-lg-2,
+.col-lg-3,
+.col-lg-4,
+.col-lg-5,
+.col-lg-6,
+.col-lg-7,
+.col-lg-8,
+.col-lg-9,
+.col-md-1,
+.col-md-10,
+.col-md-11,
+.col-md-12,
+.col-md-2,
+.col-md-3,
+.col-md-4,
+.col-md-5,
+.col-md-6,
+.col-md-7,
+.col-md-8,
+.col-md-9,
+.col-sm-1,
+.col-sm-10,
+.col-sm-11,
+.col-sm-12,
+.col-sm-2,
+.col-sm-3,
+.col-sm-4,
+.col-sm-5,
+.col-sm-6,
+.col-sm-7,
+.col-sm-8,
+.col-sm-9,
+.col-xs-1,
+.col-xs-10,
+.col-xs-11,
+.col-xs-12,
+.col-xs-2,
+.col-xs-3,
+.col-xs-4,
+.col-xs-5,
+.col-xs-6,
+.col-xs-7,
+.col-xs-8,
+.col-xs-9 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 0px;
+    padding-left: 0px;
+}
+.container-fluid>.navbar-collapse,
+.container-fluid>.navbar-header,
+.container>.navbar-collapse,
+.container>.navbar-header {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+.nav>li>a {
+    position: relative;
+    display: block;
+    padding: 10px 5px
+}
+	</style>
+</head>
+
+<body >
+<form >
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="index.html">GreyBox Admin</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="index.html">&nbsp;Home</a></li>
+        
+        <!----<li><a href="#">&nbsp;&nbsp;View Agents </a></li>---->
+      </ul>
+      
+    </div>
+  </div>
+</nav>
+
+<div class="content" id='mainbody'>
+	<div class="container-fluid">
+		
+		<div class="tab-content">
+		<div class="card" >
+		<div class="panel-body">
+		<div class="tab-content" id='info' >
+		<ul class="nav nav-tabs" style='font-size: 85%;'>					
+			<li class='active'><a data-toggle='tab' href='#one' style='color:black;'><small>Dealer/Agent</small></a></li>
+			<li><a data-toggle='tab' href='#two' style='color:black;'><small>Orders</small></a></li>
+			<li><a data-toggle='tab' href='#three' style='color:black;'><small>Active Visit</small></a></li>
+							
+		</ul><br>
+			<div class="panel panel-default tab-pane fade in active" id="one">
+				<div class="row " id='graphic' >
+					<label><br>Dealer/Agent</label>
+						<div id="chartPreferences" class="ct-chart ct-perfect-fourth"></div>
+						
+				</div>
+			</div>
+			<div class="panel panel-default tab-pane fade in " id="two">
+				<div class="row " id='orders' >
+					<label><br>Orders/Agent: Sample</label>
+					<div id="orderPref" class="ct-chart ct-perfect-fourth"></div>		
+				</div>
+			</div>
+			<div class="panel panel-default tab-pane fade in " id="three">
+				<div class="row " id='orders' >
+					<label><br>Sample</label>
+					<div id="orderPref" class="ct-chart ct-perfect-fourth"></div>		
+				</div>
+			</div>
+	
+		</div>						
+		</div>	
+		</div>	
+		</div>
+	</div>	
+</div>
+</form>	
+</body>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/dataTbl.js"></script>
+<!--  Charts Plugin -->
+<script src="assets/js/chartist.min.js"></script>
+<script>
+getData('','',"t_perf01",0,0,102);
+//getData('','',"t_perf02",0,0,103);
+var s = [];
+var a = [];
+function custom(data,p){
+	var uniqueCount = [];
+	if(p==102){
+		for(var i=0;i< data.length; i++){
+			s.push(data[i]['dealer']);
+			a.push(data[i]['name']+ "(" + data[i]['dealer'] + ")");
+		}
+		drawChart1(s,a,'#chartPreferences');
+		
+	}	
+	else if(p==103){
+	    var a1=[];
+		var c1 = [];
+		for(var j=0;j< data.length; j++){
+			
+			uniqueCount.push(data[j]['agentid']);
+		}
+		var  count = {};
+    uniqueCount.forEach(function(x) { count[x] = (count[x]||0) + 1;});
+	
+		for (var key in count) {
+			
+			a1.push(key);
+			c1.push(count[key]);
+		}
+		//drawChart2(c1,a1,'#orderPref');
+	}
+}
+</script>
+<script>
+function drawChart1(s,a,target){
+new Chartist.Bar(target, {
+  labels: a,
+  series: s
+}, {
+  distributeSeries: true
+});
+}
+
+</script>
+
+<script>
+//getDropDownData('agent','SELECT id,name from t_agent_tbl ;');
+</script>
+    
+</html>

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+   
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/bootstrap-theme.min.css" rel="stylesheet">
+<link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+
+<script src="js/moment.min.js"></script>   
+<script src="js/jquery-1.10.2.js"></script>
+<script src="./assets/js/bootstrap.min.js"></script>
+<script src="./assets/js/bootstrap-datetimepicker.min.js"></script>
+
+<link href="assets/css/font-awesome.min.css" rel="stylesheet">
+	
+	
+	
+    <title>View DelarDetails</title>
+	<style>
+	.row {
+		margin-right: 5px;
+		margin-top: 5px;
+		margin-left: 10px;
+		}
+	.container-fluid {
+		padding-right: 0px;
+		padding-left: 0px;
+	}
+	
+.col-md-1,
+.col-md-10,
+.col-md-11,
+.col-md-12,
+.col-md-2,
+.col-md-3,
+.col-md-4,
+.col-md-5,
+.col-md-6,
+.col-md-7,
+.col-md-8,
+.col-md-9,
+.col-xs-1,
+.col-xs-10,
+.col-xs-11,
+.col-xs-12,
+.col-xs-2,
+.col-xs-3,
+.col-xs-4,
+.col-xs-5,
+.col-xs-6,
+.col-xs-7,
+.col-xs-8,
+.col-xs-9 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 0px;
+    padding-left: 0px;
+}
+.container-fluid>.navbar-collapse,
+.container-fluid>.navbar-header,
+.container>.navbar-collapse,
+.container>.navbar-header {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+.nav>li>a {
+    position: relative;
+    display: block;
+    padding: 10px 5px
+}
+.card .content {
+    padding: 60px 10px 5px 5px; }
+	
+body {
+	text-transform:inherit;
+	
+}
+.chat
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.chat li
+{
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #B3A9A9;
+}
+
+.chat li.left .chat-body
+{
+    margin-left: 60px;
+	font-size:12px;
+}
+
+.chat li.right .chat-body
+{
+    margin-right: 60px;
+	font-size:12px;
+	
+}
+
+
+.chat li .chat-body p
+{
+    margin: 0;
+	width:100%;
+    color: #777777;
+}
+
+.panel .slidedown .glyphicon, .chat .glyphicon
+{
+    margin-right: 5px;
+}
+
+.panel-body
+{
+    overflow-y: scroll;
+	min-height: 530px;
+    height: 100%;
+}
+
+::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar
+{
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #555;
+}	
+.circleBase {
+    border-radius: 50%;
+	text-align:center;
+	vertical-align:middle;
+}
+.type1 {
+    width: 40px;
+    height: 40px;
+    color:white;
+    padding-top:10px;
+}
+
+	</style>
+	<script> var c=0;</script>
+</head>
+
+<body >
+
+<nav class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom:5px;">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="index.html">GreyBox Admin</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="index.html">&nbsp;Home</a></li>
+        <li class="dropdown">
+		  <a href="index.html" onclick="localStorage['eid']='';document.location='index.html'">&nbsp;&nbsp;Logout</a>
+        </li>
+        <!----<li><a href="#">&nbsp;&nbsp;View Agents </a></li>---->
+      </ul>
+      
+    </div>
+  </div>
+</nav>
+
+<div class="content" id='mainbody'>
+	<div class="container-fluid">
+		<div class="card sticky" >
+			<div class="row " id='searchdiv' style='margin-left:8px;'>
+				<div class="content col-md-5 col-xs-5 ">
+					<label class="text-muted">Start Date</label>
+					<div class='input-group date' id='datetimepicker1'>
+                    <input type='text' class="form-control" style="font-size:12px;" ></input>
+                    <span class="input-group-addon">
+                        <i id='users' class="fa fa-x fa-calendar"></i>
+                    </span>
+					</div>
+				</div>
+				<script type="text/javascript">
+				$(function () {
+					var dateNow = new Date();
+					$('#datetimepicker1').datetimepicker({
+						locale: 'en',
+						format: 'DD/MM/YYYY',
+						defaultDate:dateNow,
+						widgetPositioning: {
+						vertical: 'bottom',
+						horizontal: 'left'
+					}
+					});
+				});
+				</script>
+				
+				<div class="content col-md-5 col-xs-5 ">
+					<label class="text-muted">End Date</label>
+					<div class='input-group date' id='datetimepicker2'>
+                    <input type='text' class="form-control" style="font-size:12px;" id="end" />
+                    <span class="input-group-addon">
+                        <i id='users' class="fa fa-x fa-calendar"></i>
+                    </span>
+                </div>
+				</div>
+				<script type="text/javascript">
+				$(function () {
+					var dateNow = new Date();
+					$('#datetimepicker2').datetimepicker({
+						locale: 'en',
+						format: 'DD/MM/YYYY',
+						defaultDate:dateNow,
+						
+						widgetPositioning: {
+						vertical: 'bottom',
+						horizontal: 'right'
+					}
+					});
+				});
+				
+				</script>
+				
+				
+				<div class="content col-md-2 col-xs-2 "><label></label>
+					<br><i class="fa fa-filter" aria-hidden="true" onclick="showFilter()"></i>
+				</div>	
+				</div>
+			</div>
+			<div class="row " id='fltr' style='margin-left:1px;display:none;'>
+				<div class="content col-md-12 col-xs-12 text-muted" style="margin-left: 40px;font-size:12px;">
+					 <label class="radio-inline">
+						<input type="radio" name="optradio" id="dv" checked="">Dealer View
+					</label>
+					<label class="radio-inline">
+						<input type="radio" id="av" name="optradio">Agent View
+					</label>
+				</div>
+				<br><br>
+			</div>
+			
+			
+			<div class="row " id='searchdiv' style='margin-left:1px;'>
+			
+				<div class="content col-md-12 col-xs-12 " >
+					<button type='button' class="btn btn-sm " style="width:60%;margin-left:40px;" onClick="getVisitReport();return false">Go</button>
+				</div>
+			
+			</div>
+			</div><br>
+			<div class="panel panel-default">
+                <div class="panel-heading" id='phead'></div>
+				<div class="panel-body">
+                    <ul class="chat" id="chat">
+                                               
+                    </ul>
+				</div>
+			</div>	
+	</div>
+</div>	
+</div>
+</body>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/dataTbl.js"></script>
+
+
+<script>
+	function showFilter(){
+	  if(document.getElementById("fltr").style.display == 'none')
+		document.getElementById("fltr").style.display = "block";
+	  else
+        document.getElementById("fltr").style.display = "none"; 	  
+	}
+</script>
+<script>
+	document.getElementById("chat").innerHTML = localStorage.getItem("ordr");
+	
+	function getVisitReport(){
+		document.getElementById("fltr").style.display = "none"; 
+		document.getElementById("chat").innerHTML = "";
+		localStorage.setItem("ordr", "");
+		document.getElementById("phead").innerHTML = "";
+		
+		var start_dt = formateDt($('#datetimepicker1').data('DateTimePicker').date());
+		var end_dt = formateDt($('#datetimepicker2').data('DateTimePicker').date());
+		//alert(formateDt(start_dt));
+		
+		if(document.getElementById("dv").checked){
+		getData('','',"SELECT m.id,m.did,d.firmname,m.discussion,m.ordr, m.mdate, a.name from t_meeting_tbl m, t_dealer_tbl d, t_agent_tbl a where d.did = m.did and d.agentid = a.id and (m.mdate BETWEEN '"+start_dt+" 00:00:01' AND '"+end_dt+" 23:59:59')   order by m.mdate desc ;",0,0,102);
+		}else{
+			getData('','',"SELECT count(m.id) as visits, a.id ,a.name from t_meeting_tbl m, t_dealer_tbl d, t_agent_tbl a where d.did = m.did and d.agentid = a.id and (m.mdate BETWEEN '"+start_dt+" 00:00:01' AND '"+end_dt+" 23:59:59')  group by a.name;",0,0,101);
+		}	
+		//getData('','','SELECT m.id,m.did,d.firmname,m.discussion,m.ordr, m.mdate,a.name from t_meeting_tbl m, t_dealer_tbl d, t_agent_tbl a where d.did = m.did and d.agentid = a.id group by a.name;',0,0,102);
+		
+	}
+	
+	function custom(data,p){
+		if(p==102)
+			populateByDealer(data);
+		else if(p==101)	
+			listByAgent(data);
+	}
+	
+function listByAgent(data){
+	var chat = document.getElementById("chat");
+		var msg = "";
+				
+		for (var i = 0; i < data.length; i++) {
+			var aid = data[i]['id'] ;
+			var icon = data[i]['name'].substr(0,2).toUpperCase();
+			
+			msg += "<li id='m_"+aid+"' class='left clearfix' ><span class='chat-img pull-left'>";
+			msg += "<div class='circleBase type1' style='background:#"+getRandomColor(aid)+"'>"+icon+"</div></span>";
+			msg += "<div class='chat-body clearfix'><div class='header'>";
+			msg += "<strong class='primary-font'>"+ data[i]['name'] + "</strong> ";
+			
+			msg += "<span class='chat-img pull-right' style='padding-right:10px;font-size:20px;color:green;' onclick='populateByAgent("+aid+")'>"+data[i]['visits']+"</span></li>";
+			
+			
+		}
+		chat.innerHTML = msg;
+}
+
+function populateByAgent(aid){
+	var start_dt = formateDt($('#datetimepicker1').data('DateTimePicker').date());
+	var end_dt = formateDt($('#datetimepicker2').data('DateTimePicker').date());
+
+	getData('','',"SELECT m.id,m.did,d.firmname,m.discussion,m.ordr, m.mdate, a.name from t_meeting_tbl m, t_dealer_tbl d,t_agent_tbl a where d.did = m.did and d.agentid = a.id and a.id="+aid+"  and (m.mdate BETWEEN '"+start_dt+" 00:00:01' AND '"+end_dt+" 23:59:59') order by m.mdate desc ;",0,0,102);
+}
+
+function populateByDealer(data){
+	var chat = document.getElementById("chat");
+		var msg = "";
+				
+		for (var i = 0; i < data.length; i++) {
+			var did = data[i]['did'] ;
+			
+			msg += "<li id='m_"+data[i]['id']+"' class='left clearfix' onclick='viewdealer("+did+")'><span class='chat-img pull-left' style='font-size:14px;color:green;'>";
+			msg += formatDateY(data[i]['mdate']) + "</span>";
+			msg += "<div class='chat-body clearfix'><div class='header'>";
+			msg += "<strong class='primary-font'>"+ data[i]['firmname'] + "</strong> ";
+			//msg +=  "<small class='pull-right text-muted'>";
+			msg += "<p>" + data[i]['discussion'] + "</p>" ;
+			msg += "<span class='chat-img pull-right' style='float:right;' >&nbsp;&nbsp;";
+			if(data[i]['ordr'].trim().length > 2)
+				msg += "<span class='markread'> <i class='fa fa-2x fa-shopping-cart ' aria-hidden='true' style='color:green;'></i>  </span>"; 
+				
+			msg +=  "</div></span>";
+			msg +=  "<span class='chat-img pull-right text-muted' style='padding-right:10px;font-size:10px;color:green;' >"+data[i]['name']+"</span></li>";
+			msg += "</li>";
+			
+			
+		}
+		chat.innerHTML = msg;
+}	
+	
+function formatDateY(dt){
+	if(dt == null) return "Sending..";
+	try{
+		var dateObj = new Date(dt);
+		var month = dateObj.getMonth() + 1; //months from 1-12
+		var day = dateObj.getDate();
+		var m = dateObj.getMinutes();
+		
+			newdate =  getM(month) + " " + day + " " ;
+				
+		return newdate;
+	} catch(e){return dt;}
+}
+
+function viewdealer(did){
+	var chat = document.getElementById("chat").innerHTML;
+	localStorage.setItem("ordr", chat);
+	window.location.href = "viewdealer1.html?did=" + did;
+}
+
+function getM(m){
+ if(m==1)
+ 	return "Jan";
+ else if(m==2)
+    return "Feb";
+ else if(m==3)
+    return "Mar"; 
+ else if(m==4)
+    return "Apr";  
+ else if(m==5)
+    return "May"; 
+ else if(m==6)
+    return "Jun";   
+ else if(m==7)
+    return "Jul"; 
+ else if(m==8)
+    return "Aug";  
+ else if(m==9)
+    return "Sep";  
+ else if(m==10)
+    return "Oct"; 
+ else if(m==11)
+    return "Nov";
+ else if(m==12)
+    return "Dec";     
+
+}
+	
+	function getRandomColor(sid) {
+  var colors = ["ff6347","ff00ff","ff0080","00cc00","ff6347","55C1E7","003399","990033","ff6347","55C1E7"];
+  var toText = sid.toString(); //convert to string
+  var lastChar = toText.slice(-1); //gets last character
+  var lastDigit = +(lastChar); 
+  
+  return colors[lastDigit];
+}
+
+function formateDt(dt){
+   var date = new Date(dt);
+	var day = date.getDate();
+  var monthIndex = date.getMonth() + 1;
+  var year = date.getFullYear();
+  
+  if(monthIndex < 10)
+	monthIndex = "0" + monthIndex;
+  if(day < 10)
+	day = "0" + day;		
+  
+  return year+"-"+monthIndex+"-"+day;
+}
+</script>
+
+
+ 
+</html>
